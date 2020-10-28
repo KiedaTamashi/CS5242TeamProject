@@ -1,0 +1,51 @@
+#inception
+import torch
+from torchvision import  models
+from torch import nn
+from torchvision import models
+import os
+
+DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+EPOCH = 3
+
+# choose a pretrained model
+model = models.inception_v3(pretrained=True)
+
+# change the class of the last fc layer
+fc_features = model.fc.in_features
+model.fc = nn.Linear(fc_features, 3)
+
+model = model.to(DEVICE)
+
+# optimizer = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.5)
+optimizer = torch.optim.Adadelta(model.parameters(), lr=0.02, rho=0.95, eps=1e-8)
+criterion = nn.CrossEntropyLoss()
+
+start_epoch = 0
+if os.path.exists('//content//drive//My Drive//Checkpoints//inception//checkpoint.pth.tar'):
+  checkpoint = torch.load('//content//drive//My Drive//Checkpoints//inception//checkpoint.pth.tar')
+  model.load_state_dict(checkpoint['state_dict'])
+  optimizer.load_state_dict(checkpoint['optimizer'])
+  start_epoch = checkpoint['epoch']
+  print('successfully loading epoch {} !'.format(start_epoch))
+
+best_accuracy = 0.
+is_best = False
+for epoch in range(start_epoch + 1, start_epoch + EPOCH + 1):
+  print("epoch number: ", epoch)
+  train(model, optimizer, criterion, epoch)
+  print("starting evaluating...")
+  val_loss, val_accuracy = valid(model, optimizer, criterion, epoch)
+  if val_accuracy > best_accuracy:
+    best_accuracy = val_accuracy
+    is_best = True
+  else:
+    is_best = False
+  save_checkpoint({
+            'epoch': epoch,
+            'arch': 'inception',
+            'state_dict': model.state_dict(),
+            'best_prec1': val_accuracy,
+            'optimizer': optimizer.state_dict(),
+        }, is_best,filepath = '//content//drive//My Drive//Checkpoints//inception//checkpoint.pth.tar',
+              bst_filepath = '//content//drive//My Drive//Checkpoints//inception//model_best.pth.tar')
