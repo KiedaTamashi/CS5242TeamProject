@@ -1,12 +1,11 @@
-from codes.fastTraditionalModel import *
+# from codes.fastTraditionalModel import *
 import argparse
-
+parser = argparse.ArgumentParser()
+parser.add_argument("mode", type=str,
+                    help="Mode: train/test. Data Folder is saved following the email.")
+args = parser.parse_args()
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("mode", type=str,required=True,
-                        help="Mode: train/test. Data Folder is saved following the email.")
-    args = parser.parse_args()
     if args.mode == "train":
         train()
     elif args.mode == "test":
