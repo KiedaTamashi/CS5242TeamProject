@@ -1,4 +1,4 @@
-from codes.fastTraditionalModel.py import *
+from codes.fastTraditionalModel import *
 import argparse
 
 

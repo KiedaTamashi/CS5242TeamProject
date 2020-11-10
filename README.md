@@ -32,4 +32,13 @@ setting changed, modify the val of "augment_title" in this .py file:
 
 2/Train
 Just run:
-    
+
+    python run.py train
+The model file will be saved in /ckp
+
+3/Test
+Just run 
+
+    python run.py test
+It will generate test_result.csv, which is what we want.
+
