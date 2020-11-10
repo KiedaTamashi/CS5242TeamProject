@@ -1,0 +1,9 @@
+fastai
+pathlib
+pandas
+numpy
+efficientnet-pytorch
+torch
+torchvision
+opencv-python
+argparse
